@@ -125,7 +125,7 @@ Moving on to the actual input functions. Typically, you can use ```CHOICE```. Yo
 ```Batch
 :CONTROL
 FOR /L %%C in () DO (
-    IF EXIST "%~dpn0.quit" (
+    IF exist "%~dpn0.quit" (
         EXIT
     )
     FOR /F "tokens=*" %%A in ('CHOICE /C:ABCE /N') DO (
@@ -146,7 +146,7 @@ Therefore we can read the last character to get the user input. Here is the equi
 ```Batch
 :CONTROL
 FOR /L %%C in () do (
-    IF EXIST "%~dpn0.quit" (
+    IF exist "%~dpn0.quit" (
         EXIT
     )
     FOR /F "delims=" %%A in ('XCOPY /W "%~F0" "%~F0" 2^>nul') DO (
