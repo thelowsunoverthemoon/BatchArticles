@@ -59,11 +59,11 @@ FOR /L %%# in () DO (
 
 :CONTROL
 FOR /L %%C in () DO (
+    IF EXIST "%~dpn0.quit" (
+        DEL "%~dpn0.quit"
+        EXIT
+    )
     FOR /F "tokens=*" %%A in ('CHOICE /C:ABCE /N') DO (
-        IF EXIST "%~dpn0.quit" (
-            DEL "%~dpn0.quit"
-            EXIT
-        )
         <NUL SET /P ".=%%A"
     )
 )
