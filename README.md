@@ -3,10 +3,8 @@
 ## Introduction
 I've created many games in Batch Script in many genres like platformer games, puzzle games, clones of famous games, and in these tutorials I'm going to go over some techniques that I use to create them.
 
- <img src="img/prism.gif" >
+<img src="img/prism.gif" >
 <img src="img/neocircuit.gif" >
-
-
 
 There are 3 main topics I want to cover:
 
@@ -105,7 +103,7 @@ You can extend this technique to have an arbitrary number of threads. For exampl
 
 The ```RENDERER``` thread reads ```stdin``` from a ```RENDERER``` file that ```GAME``` outputs to ```stdout```. In this way, we can separate the rendering logic (for example, sprite animations) into it's own separate thread, and only have ```GAME``` logic inside the ```GAME``` thread. See my Plants Vs Zombies implementation [here](https://github.com/thelowsunoverthemoon/Arcade.bat/blob/master/Scripts/PlantsVsZombies.bat).
 
-
+<img src="img/plants.gif" >
 
 Another example of using an auxiliary thread is if your game takes too many characters and you line goes over 8191 characters. This is very bad as it can just crash your process, so if you want to output some environment details for example, you can use a separate thread that outputs those. For example,
 
@@ -154,7 +152,7 @@ FOR /L %%C in () do (
         DEL "%~dpn0.quit"
         EXIT
     )
-    FOR /F "delims=" %%A in ('xcopy /w "%~f0" "%~f0" 2^>nul') DO (
+    FOR /F "delims=" %%A in ('XCOPY /W "%~F0" "%~F0" 2^>nul') DO (
         SET "key=%%A"
         SET "key=!key:~-1!"
         IF /I "!key!" == "A" (
@@ -251,9 +249,9 @@ IF exist "%~dpn0.quit" (
 
 Make sure to delete this file at the start of your Batch file or the next time you run it the threads will end immediately. After it exits, we logically return back to the ```MAIN``` thread. Now there is an interesting hitch when you use a blocking function as your input method such as ```CHOICE``` or ```XCOPY /W```. Since those are blocking, that means even if we do create that file, you will be blocked at the command since the ```IF``` statement is gated by it. So you need the user to input one more input to exit (this doesn't apply to using a ```POWERSHELL``` loop I showed since it's non blocking).
 
-An interesting, pure Batch way around this is to use query state sequences. How this fixes the problem with ```CHOICE```, is that we can read the escape character. (Note: this is only supported on Windows 10 and above since VT100 escape sequences are supported there). ```CHOICE``` cannot read the escape character, but ```XCOPY``` can since it can read an arbitrary byte of input. So we can use the query state sequences to automatically output to ```stdin``` without needing user input. It outputs in the form ```ESC[<r>;<c>R``` so we can just read it in ```XCOPY```, then exit if we get it. There are also other solutions like using ```SendKeys``` by embedding VBScript if you really wanted to, but that's pretty ugly and this solution is quite clean in my opinion.
+An interesting, pure Batch way around this is to use query state sequences. First, switch to using ```XCOPY /W```. How this fixes the problem with ```CHOICE```, is that we can read the escape character. (Note: this is only supported on Windows 10 and above since VT100 escape sequences are supported there). ```CHOICE``` cannot read the escape character, but ```XCOPY``` can since it can read an arbitrary byte of input. So we can use the query state sequences to automatically output to ```stdin``` without needing user input. It outputs in the form ```ESC[<r>;<c>R``` so we can just read it in ```XCOPY```, then exit if we get it. There are also other solutions like using ```SendKeys``` by embedding VBScript if you really wanted to, but that's pretty ugly and this solution is quite clean in my opinion. Below is an example program that does the same title changing as before, but you can only need to press A once to exit back to ```MAIN```.
 
-```
+```Batch
 @ECHO OFF
 SETLOCAL ENABLEDELAYEDEXPANSION
 FOR /F %%A in ('ECHO PROMPT $E^| CMD') DO SET "\e=%%A"
@@ -262,30 +260,40 @@ IF not "%~1" == "" (
 )
 
 "%~F0" CONTROL >"%temp%\%~n0_signal.txt" | "%~F0" GAME <"%temp%\%~n0_signal.txt"
-ECHO Bye
+
+ECHO No need to input extra key
 PAUSE
+
 EXIT /B
 
 :GAME
 FOR /L %%# in () DO (
     SET /P "input="
-IF "!input!" == "A" (
-    ECHO exit game
-   <NUL SET /P "=%\e%[6n"
-    EXIT 
-) else IF "!input!" == "B" (
-    ECHO press B
-)
-SET "input="
+    IF "!input!" == "A" (
+       <NUL SET /P "=%\e%[6n"
+        EXIT 
+    )
+    SET "input="
+    
+    SET /A "number=(number + 1) %% 3"
+    TITLE Number !number!
 )
 
 :CONTROL
 FOR /L %%C in () do (
-    SET "key="
-    FOR /F "delims=" %%A in ('xcopy /w "%~f0" "%~f0" 2^>nul') do IF NOT defined key SET "key=%%A"
-    IF "!key:~-1!" == "%\e%" EXIT
-    IF /I "!key:~-1!" == "A" <NUL SET /P ".=A"
-    IF /I "!key:~-1!" == "B" <NUL SET /P ".=B"
+    IF EXIST "%~dpn0.quit" (
+        DEL "%~dpn0.quit"
+        EXIT
+    )
+    FOR /F "delims=" %%A in ('XCOPY /W "%~F0" "%~F0" 2^>nul') DO (
+        SET "key=%%A"
+        SET "key=!key:~-1!"
+        IF /I "!key!" == "A" (
+            <NUL SET /P ".=A"
+        ) else IF "!key!" == "%\e%" (
+            EXIT
+        )
+    )
 )
 GOTO :EOF
 ```
