@@ -1,4 +1,4 @@
-## Intro to Delayed Expansion
+# Intro to Delayed Expansion
 
 
 One of the first bumps in learning Batch is Delayed Expansion. If you’re coming from higher level languages, and you’re using an ```IF``` statement, this code should make sense. 
