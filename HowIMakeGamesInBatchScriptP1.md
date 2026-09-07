@@ -1,7 +1,7 @@
 # How I make games in Batch Script
 
 ## Introduction
-I've created many games in Batch Script in many genres like platformer games, puzzle games, clones of famous games, and in these tutorials I'm going to go over some techniques that I use to create them.
+I've created many games in Batch Script in many genres like platformer games, puzzle games, clones of famous games, and in these tutorials I'm going to go over some techniques that I use to create them. The reason is that no easily accessible tutorial that exists for this sort of thing, so I don't want the knowledge to be lost.
 
 <img src="img/prism.gif" >
 <img src="img/neocircuit.gif" >
