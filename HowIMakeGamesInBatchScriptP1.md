@@ -220,7 +220,7 @@ While this means your program won't be pure Batch, and some environments block P
 
 ```Batch
 IF defined input (
-    IF NOT "!input:A=!" == "!input!" (
+    IF not "!input:A=!" == "!input!" (
         ECHO Contains A
     )
     SET "input="
