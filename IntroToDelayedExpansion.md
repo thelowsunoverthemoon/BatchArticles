@@ -11,7 +11,7 @@ IF "%var%" == "Hello" (
 )
 ```
 
-Output should be ```Bye```, right? Nope, it would output ```Hello```. The reason is how the CMD interpreter parses Batch script. This is the guy that reads your batch file line-by-line as it goes along. Typically, each line, it will expand all variables before stopping. However, when it reaches a parenthesis pair, it will automatically expand all the variables inside the pair. In other words, when it reaches a codeblock. So, for example
+Output should be ```Bye```, right? Nope, it would output ```Hello```. The reason is how the ```CMD``` interpreter parses Batch script. This is the guy that reads your batch file line-by-line as it goes along. Typically, each line, it will expand all variables before stopping. However, when it reaches a parenthesis pair, it will automatically expand all the variables inside the pair. In other words, when it reaches a codeblock. So, for example
 
 ```Batch
 FOR %%Q in (hello bye seeya) DO (
@@ -19,7 +19,7 @@ FOR %%Q in (hello bye seeya) DO (
 )
 ```
 
-The FOR loop syntax takes in commands, and the CMD interpreter will expand all the variables inside that FOR loop first, before actually running it. So let’s say our old example
+The ```FOR``` loop syntax takes in commands, and the ```CMD``` interpreter will expand all the variables inside that ```FOR``` loop first, before actually running it. So let’s say our old example
 
 ```Batch
 SET "var=Hello"
@@ -29,11 +29,11 @@ IF "%var%" == "Hello" (
 )
 ```
 
-Once the interpreter gets to the IF, it will expand all the variables inside it, in this case ```var```. This expanded version is saved and then run. So, this version would look like
+Once the interpreter gets to the ```IF```, it will expand all the variables inside it, in this case ```var```. This expanded version is saved and then run. So, this version would look like
 
 ```Batch
-IF “%var%" == “Hello” (
-    SET “var=Bye”
+IF "%var%" == "Hello" (
+    SET "var=Bye"
     ECHO Hello
 )
 ```
@@ -58,9 +58,7 @@ main(void) {
 }
 ```
 
-Before compiling.
-
-Now, all this is great, but obviously very limiting. For instance you can’t do this
+Before compiling. Now, this is obviously very limiting. For instance you can’t do this
 
 ```Batch
 SET "num=1"
@@ -76,7 +74,7 @@ Which is such a simple construct. Keep in mind that only the ```ECHO``` doesn’
 SETLOCAL ENABLEDELAYEDEXPANSION
 ```
 
-```SETLOCAL``` is a command that creates a "bubble", and paired with ```ENDLOCAL``` it’s like simulating variable scope. The parameters can change CMD behaviour, for example by allowing for command extensions. But to be honest, in this day and age, you won't see that option much. ```ENABLEDELAYEDEXPANSION``` is the one that allows variables to be expanded EVERY line. All you have to do is enclose it with ```!!``` instead of ```%%```.
+```SETLOCAL``` is a command that creates a "bubble", and paired with ```ENDLOCAL```, it's like simulating variable scope. The parameters can change CMD behaviour, for example by allowing for command extensions. ```ENABLEDELAYEDEXPANSION``` is the one that allows variables to be expanded every line. All you have to do is enclose it with ```!!``` instead of ```%%```.
 
 ```Batch
 SET "num=1"
@@ -86,7 +84,7 @@ FOR %%Q in (1, 1, 3) DO (
 )
 ```
 
-Now the script works as expected. Yay! Now you’ll notice that now we have 2 types of expansion : ```!``` and ```%```. That means we can also do this
+Now the script works as expected. You'll notice that now we have 2 types of expansion : ```!``` and ```%```. That means we can also do this
 
 ```Batch
 SET "inside=hello"
@@ -95,7 +93,7 @@ SET "ihello=Bye"
 ECHO !i%inside%!
 ```
 
-Will print ```Bye```, the contents of ```hello```. Like we saw before, dont think of Batch variables as objects. Think of them as text the moment they are expanded. That’s all.
+Will print ```Bye```, the contents of ```hello```. Like we saw before, don't think of Batch variables as objects. Think of them as text the moment they are expanded. That's all.
 
 ```Batch
 !i%inside%! -> first expansion -> !ihello! -> second expansion -> Bye
@@ -123,9 +121,7 @@ ECHO %ihello%
 GOTO :EOF
 ```
 
-Obviously, introducing Delayed Expansion also introduces many side effects. Read the link below on how CMD parses commands to gain a better understanding of some these effects. 
-
-Be creative! These are basic usages but Delayed Expansion is a powerful tool that allows you to be very creative. That’s the beauty of Batch. The simplistic parsing (again, everything is text) allows a lot of interesting constructs, which you can see if you visit DOStips (a Batch forum) and look around.
+Obviously, introducing Delayed Expansion also introduces many side effects. Read the link below on how CMD parses commands to gain a better understanding of some these effects.  Be creative! These are basic usages but Delayed Expansion is a powerful tool that allows you to be very creative. The simplistic parsing (again, everything is text) allows a lot of interesting constructs, which you can see if you visit DOStips and look around.
 
 ### Further Links
 * [More Detailed Information](https://ss64.com/nt/delayedexpansion.html)
