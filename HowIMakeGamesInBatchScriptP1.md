@@ -298,7 +298,9 @@ FOR /L %%C in () do (
 GOTO :EOF
 ```
 
+## Credits
 
+Credits to dbenham for the original two process technique in his Snake game [here](https://archive.is/Y6hgZ). For more information about multithreading in Batch Script, see this [multithreading framework](https://www.dostips.com/forum/viewtopic.php?f=3&t=6601&p=63390#p63390) by Aacini, or my own implementations of parallel computation operations [here](https://github.com/thelowsunoverthemoon/loom).
 
 
 
