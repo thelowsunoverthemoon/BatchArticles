@@ -27,7 +27,7 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 IF NOT "%~1" == "" (
     GOTO :%~1
 )
-IF EXIST "%~dpn0.quit" (
+IF exist "%~dpn0.quit" (
     DEL /F /Q "%~dpn0.quit"
 )
 COPY NUL "%TEMP%\%~n0_signal.txt" >NUL
@@ -59,8 +59,7 @@ FOR /L %%# in () DO (
 
 :CONTROL
 FOR /L %%C in () DO (
-    IF EXIST "%~dpn0.quit" (
-        DEL "%~dpn0.quit"
+    IF exist "%~dpn0.quit" (
         EXIT
     )
     FOR /F "tokens=*" %%A in ('CHOICE /C:ABCE /N') DO (
@@ -127,7 +126,6 @@ Moving on to the actual input functions. Typically, you can use ```CHOICE```. Yo
 :CONTROL
 FOR /L %%C in () DO (
     IF EXIST "%~dpn0.quit" (
-        DEL "%~dpn0.quit"
         EXIT
     )
     FOR /F "tokens=*" %%A in ('CHOICE /C:ABCE /N') DO (
@@ -149,7 +147,6 @@ Therefore we can read the last character to get the user input. Here is the equi
 :CONTROL
 FOR /L %%C in () do (
     IF EXIST "%~dpn0.quit" (
-        DEL "%~dpn0.quit"
         EXIT
     )
     FOR /F "delims=" %%A in ('XCOPY /W "%~F0" "%~F0" 2^>nul') DO (
@@ -242,7 +239,6 @@ And for all the processes if we detect it, then exit.
 
 ```Batch
 IF exist "%~dpn0.quit" (
-    DEL "%~dpn0.quit"
     EXIT
 )
 ```
@@ -258,6 +254,13 @@ FOR /F %%A in ('ECHO PROMPT $E^| CMD') DO SET "\e=%%A"
 IF not "%~1" == "" (
     GOTO :%~1
 )
+IF exist "%~dpn0.quit" (
+    DEL /F /Q "%~dpn0.quit"
+)
+COPY NUL "%TEMP%\%~n0_signal.txt" >NUL
+
+:MAIN
+ECHO Pres A to exit
 
 "%~F0" CONTROL >"%temp%\%~n0_signal.txt" | "%~F0" GAME <"%temp%\%~n0_signal.txt"
 
@@ -282,7 +285,6 @@ FOR /L %%# in () DO (
 :CONTROL
 FOR /L %%C in () do (
     IF EXIST "%~dpn0.quit" (
-        DEL "%~dpn0.quit"
         EXIT
     )
     FOR /F "delims=" %%A in ('XCOPY /W "%~F0" "%~F0" 2^>nul') DO (
