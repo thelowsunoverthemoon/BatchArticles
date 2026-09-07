@@ -245,7 +245,7 @@ IF exist "%~dpn0.quit" (
 
 Make sure to delete this file at the start of your Batch file or the next time you run it the threads will end immediately. After it exits, we logically return back to the ```MAIN``` thread. Now there is an interesting hitch when you use a blocking function as your input method such as ```CHOICE``` or ```XCOPY /W```. Since those are blocking, that means even if we do create that file, you will be blocked at the command since the ```IF``` statement is gated by it. So you need the user to input one more input to exit (this doesn't apply to using a ```POWERSHELL``` loop I showed since it's non blocking).
 
-An interesting, pure Batch way around this is to use query state sequences. First, switch to using ```XCOPY /W```. How this fixes the problem with ```CHOICE```, is that we can read the escape character. (Note: this is only supported on Windows 10 and above since VT100 escape sequences are supported there). ```CHOICE``` cannot read the escape character, but ```XCOPY``` can since it can read an arbitrary byte of input. So we can use the query state sequences to automatically output to ```stdin``` without needing user input. It outputs in the form ```ESC[<r>;<c>R``` so we can just read it in ```XCOPY```, then exit if we get it. There are also other solutions like using ```SendKeys``` by embedding VBScript if you really wanted to, but that's pretty ugly and this solution is quite clean in my opinion. Below is an example program that does the same title changing as before, but you can only need to press A once to exit back to ```MAIN```.
+An interesting, pure Batch way around this is to use query state sequences. First, switch to using ```XCOPY /W```. How this fixes the problem with ```CHOICE```, is that we can read the escape character. (Note: this is only supported on Windows 10 and above since VT100 escape sequences are supported there). ```CHOICE``` cannot read the escape character, but ```XCOPY``` can since it can read an arbitrary byte of input. So we can use the query state sequences to automatically output to ```stdin``` without needing user input. It outputs in the form ```ESC[<r>;<c>R``` so we can just read it in ```XCOPY```, then exit if we get it. There are also other solutions like using ```SendKeys``` by embedding VBScript if you really wanted to, but that's pretty ugly and this solution is quite clean in my opinion. Below is an example program that does the same title changing as before, but you only need to press A once to exit back to ```MAIN```.
 
 ```Batch
 @ECHO OFF
@@ -260,7 +260,7 @@ IF exist "%~dpn0.quit" (
 COPY NUL "%TEMP%\%~n0_signal.txt" >NUL
 
 :MAIN
-ECHO Pres A to exit
+ECHO Press A to exit
 
 "%~F0" CONTROL >"%temp%\%~n0_signal.txt" | "%~F0" GAME <"%temp%\%~n0_signal.txt"
 
