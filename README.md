@@ -4,12 +4,12 @@ A lot of knowledge on Batch Script is buried away in old Google Groups or forums
 
 ### Articles
 
-* How I make games in Batch Script: Multithreading
+* [How I make games in Batch Script: Multithreading](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/HowIMakeGamesInBatchScriptP1.md)
 * How I make games in Batch Script: Colour Graphics
-* Intro to Delayed Expansion
+* [Intro to Delayed Expansion](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/IntroToDelayedExpansion.md)
 * Intro to Macros
 * Intro to Command Substitution
-* Iterators in Batch
+* [Iterators in Batch](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/Iterators.md)
 * HTAs, Chimeras, and more
 * Methods of getting Special Characters
   
