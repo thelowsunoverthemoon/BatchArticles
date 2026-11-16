@@ -5,7 +5,8 @@ A lot of knowledge on Batch Script is buried away in old Google Groups or forums
 ### Articles
 
 * [How I make games in Batch Script: Multithreading](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/HowIMakeGamesInBatchScriptP1.md)
-* [How I make games in Batch Script: Everything Else](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/HowIMakeGamesInBatchScriptP2.md)
+* [How I make games in Batch Script: Graphics](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/HowIMakeGamesInBatchScriptP2.md)
+  [How I make games in Batch Script: Everything Else](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/HowIMakeGamesInBatchScriptP3.md)
 * [Intro to Delayed Expansion](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/IntroToDelayedExpansion.md)
 * Intro to Macros
 * Intro to Command Substitution
