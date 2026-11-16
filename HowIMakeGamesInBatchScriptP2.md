@@ -1,7 +1,7 @@
 # How I make games in Batch Script, Part 2
 
 ## Introduction
-This is the second part of my guide to making games in Batch Script ([part 1](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/HowIMakeGamesInBatchScriptP1.md)), and covers a variety of miscellaneous, smaller topics. The main focus is on the visual aspect: how to get colourful graphics in your games. However, note that those methods only apply to Windows 10+ (specifically Windows 10 version 1511+. Note that 1511 didn't support true 24 bit RGB colours but still accepted the sequences, just rounded them to the original 16 colour palette; RGB colours were added in 1703), as they rely on VT100 escape sequence support, but they would still work if using a terminal emulator that supports those sequences.
+This is the second part of my guide to making games in Batch Script ([part 1](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/HowIMakeGamesInBatchScriptP1.md)), and covers graphics: how to get colourful graphics in your games. However, note that most of these methods only apply to Windows 10+ (specifically Windows 10 version 1511+. Note that 1511 didn't support true 24 bit RGB colours but still accepted the sequences, just rounded them to the original 16 colour palette; RGB colours were added in 1703), as they rely on VT100 escape sequence support, but they would still work if using a terminal emulator that supports those sequences.
 
 ## Font
 
@@ -134,6 +134,3 @@ To use the sequences, all you have to do is print to ```stdout```, for example u
 
 ## Sixels
 ## Code Pages
-## Music
-## Framerate
-## Hitboxes
