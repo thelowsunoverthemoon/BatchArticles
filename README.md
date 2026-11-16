@@ -5,7 +5,7 @@ A lot of knowledge on Batch Script is buried away in old Google Groups or forums
 ### Articles
 
 * [How I make games in Batch Script: Multithreading](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/HowIMakeGamesInBatchScriptP1.md)
-* How I make games in Batch Script: Colour Graphics
+* How I make games in Batch Script: Everything Else
 * [Intro to Delayed Expansion](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/IntroToDelayedExpansion.md)
 * Intro to Macros
 * Intro to Command Substitution
@@ -18,12 +18,17 @@ A lot of knowledge on Batch Script is buried away in old Google Groups or forums
 * Efficient Powershell Input: https://www.dostips.com/forum/viewtopic.php?f=3&t=6936
 * Alternate Data Streams: https://www.dostips.com/forum/viewtopic.php?t=6185
 * Macros: https://www.dostips.com/forum/viewtopic.php?f=3&t=2518
+* Space Removal in Strings: https://www.dostips.com/forum/viewtopic.php?p=60054
+* Arbitrary Character Generation: https://www.dostips.com/forum/viewtopic.php?t=3857
+* HTA GUI: https://www.dostips.com/forum/viewtopic.php?t=6581
 * Command Substitution: https://www.dostips.com/forum/viewtopic.php?f=3&t=6429, https://www.dostips.com/forum/viewtopic.php?f=3&t=6744
 * SETX: https://www.dostips.com/forum/viewtopic.php?f=3&t=5083&p=29897#p29897
+* Undocumented Wildcards: https://www.dostips.com/forum/viewtopic.php?t=6207
 * Efficient While Loops: https://www.dostips.com/forum/viewtopic.php?t=3487
 * Particle Effects: https://www.dostips.com/forum/viewtopic.php?f=3&t=7447&p=49439#p49439
 * Reading from Sequences that output to stdin: https://www.dostips.com/forum/viewtopic.php?t=9454
 * Math Library: https://www.dostips.com/forum/viewtopic.php?f=3&t=5819
+* 2D Camera: https://www.dostips.com/forum/viewtopic.php?t=12152
 * Invisible Characters using FINDSTR: https://www.dostips.com/forum/viewtopic.php?f=3&t=8760&p=57775&hilit=aacini#p57620
 * Cursor Positioning without escape sequences: https://www.dostips.com/forum/viewtopic.php?t=7898
 * CERTUTIL Embedding: https://lallouslab.net/2016/05/30/batchography-embedding-an-executable-file-in-a-batch-script/
