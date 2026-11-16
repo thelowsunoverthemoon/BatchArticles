@@ -60,7 +60,11 @@ IF "%1" == "" (
 
 ## VT100 Escape Sequences
 
-VT100 escape sequence support allows for easy colour graphics in Batch Script: mainly, allowing for arbitrary cursor positioning and multiple colours in one console. Of course, there were ways to do this before VT100 support, but they were cumbersome and obscure. For example, the ```FINDSTR``` trick is famous for allowing multiple colours (see the answer by user jeb [here](https://stackoverflow.com/questions/4339649/how-to-have-multiple-colors-in-a-windows-batch-file)). The basic idea works by using the ```/A``` switch in ```FINDSTR``` which displays a filename in the same format as the ```COLOR``` command. The original idea created the file with the text as the filename with a single backspace character inside, so when you use ```FINDSTR``` to search for any non-empty lines, the colon character from the command output is erased with the backspace. For example, the below function by user ```jeb```
+VT100 escape sequence support allows for easy colour graphics in Batch Script: mainly, allowing for arbitrary cursor positioning and multiple colours in one console. Of course, there were ways to do this before VT100 support, but they were cumbersome and obscure.
+
+### Before VT100
+
+For example, the ```FINDSTR``` trick is famous for allowing multiple colours (see the answer by user jeb [here](https://stackoverflow.com/questions/4339649/how-to-have-multiple-colors-in-a-windows-batch-file)). The basic idea works by using the ```/A``` switch in ```FINDSTR``` which displays a filename in the same format as the ```COLOR``` command. The original idea created the file with the text as the filename with a single backspace character inside, so when you use ```FINDSTR``` to search for any non-empty lines, the colon character from the command output is erased with the backspace. For example, the below function by user ```jeb```
 
 ```Batch
 :ColorText
@@ -91,12 +95,13 @@ exit /b
 
 The downside to the ```FINDSTR``` technique is that it is quite slow and creates a temporary file, so a real time game with many colours at once would not work using this. Tangentially, the file name rules come in handy from time to time. For example, in [radish](https://github.com/thelowsunoverthemoon/radish), to allocate the ```CMDCMDLINE``` buffer to an arbitrary size, I use ```%COMSPEC%\\##############\\..\\..\\cmd.exe /k file.bat ```. Since the ```###``` is removed, I can add as many ```#``` as I want. 
 
-
 For arbitrary cursor positioning, you could whip something up quickly by manipulating spaces and newlines. Not hard per say, but annoying since you would effectively be writing a 2D renderer. However, an interesting technique for arbitrary (but relative) cursor positioning involves exploiting the behaviour of tab and backspace sequences (see [here](https://www.dostips.com/forum/viewtopic.php?t=7898)).
+
+### Prerequisites
 
 Going back to VT100 escape sequences, in earlier versions of Windows you had to enable ```VirtualTerminalLevel``` to 1 in ```HKEY_CURRENT_USER\CONSOLE```. This would involve the same ```REG``` technique that we saw in the [Font](#Font) section.
 
-Explaining all of the sequences would be pretty useless since they are quite straightforward. A good guide to all of them is in the Microsoft [documentation](https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences). So, I'll only go through some of the most important ones and some tips / tricks. The first part is actually getting the escape character. There are many ways to do it. You can either do it "literally", as in you just copy and paste the escape character. In Notepad++ it typically shows up as a empty box character. However, the downside compared to doing it programmatically is that it may get lost when sharing through different file formats and modes, and it can get annoying to keep copy pasting every time. An easier way is to just derive it programmatically. One of the earlier ways to do it was 
+The first part is actually getting the escape character. There are many ways to do it. You can either do it "literally", as in you just copy and paste the escape character. In Notepad++ it typically shows up as a empty box character. However, the downside compared to doing it programmatically is that it may get lost when sharing through different file formats and modes, and it can get annoying to keep copy pasting every time. An easier way is to just derive it programmatically. One of the earlier ways to do it was 
 
 ```Batch
 FOR /F "tokens=1,2 delims=#" %%A in ('"PROMPT #H#E# & ECHO ON & FOR %%B in (1) DO REM"') DO (
@@ -127,10 +132,15 @@ FOR /F %%A in ('ECHO PROMPT $E^| CMD') DO SET "\e=%%A"
 By passing in ```PROMPT $E``` to ```CMD``` we start a new CMD session and run the ```PROMPT``` command. ```CMD``` defaults with ```ECHO ON``` and so it becomes the same thing as before. The reason the previous text isn't detected for both those techniques (eg. the text of the ```PROMPT``` command) is because a newline is also a delimiter so it at first sets ```\e``` to those strings, and in the final loop sets it to the correct escape character.
 
 
+### Using Sequences
 
+To use the sequences, all you have to do is print to ```stdout```, for example using ```ECHO``` or ```<NUL SET /P```. Explaining all of the sequences would be pretty useless since they are quite straightforward. A good guide to all of them is in the Microsoft [documentation](https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences). So, I'll only go through some of the most important ones and some tips / tricks. 
 
-To use the sequences, all you have to do is print to ```stdout```, for example using ```ECHO``` or ```<NUL SET /P```.
+### Clearing
 
+### Colours
+
+### Positioning
 
 ## Sixels
 ## Code Pages
