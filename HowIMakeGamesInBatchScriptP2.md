@@ -5,13 +5,10 @@ This is the second part of my guide to making games in Batch Script ([part 1](ht
 
 ## Font
 
-Changing the font can be useful when you have a custom font with sprites, for example. Font changing can be done by using the [REG](https://ss64.com/nt/reg.html) family of commands. These commands edit the registry, which contains configurations for the operating system, applications, and user preferences. Tangentially, these commands are quite useful for many of the annoying things in Windows. For example, disabling Cortana:
+Changing the font can be useful when you have a custom font with sprites, for example. Font changing can be done by using the [REG](https://ss64.com/nt/reg.html) family of commands. These commands edit the registry, which contains configurations for the operating system, applications, and user preferences. Tangentially, these commands are quite useful for many of the annoying things in Windows. For example, disabling Cortana in Windows 10:
 
 ```Batch
-@ECHO OFF
 REG ADD "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /V "AllowCortana" /T REG_DWORD /D "0" /F
-PAUSE
-EXIT /B 
 ```
 
 There are requirements for the font used. For example, in Conhost, there are a list of requirements such as being monospace (full list [here]( https://renenyffenegger.ch/notes/Windows/dirs/Windows/System32/conhost_exe)). The overall technique is to add a ```Console``` registry key with the console title (in the example, it's GameEngine), start the process again with a parameter (so it gets the new font and skips creating the reg key) then delete the reg key so it doesn't affect other scripts if they have the same title. The specification for the key can be found [here](https://renenyffenegger.ch/notes/Windows/registry/tree/HKEY_CURRENT_USER/console/index). 
@@ -99,7 +96,7 @@ For arbitrary cursor positioning, you could whip something up quickly by manipul
 
 ### Prerequisites
 
-Going back to VT100 escape sequences, in earlier versions of Windows you had to enable ```VirtualTerminalLevel``` to 1 in ```HKEY_CURRENT_USER\CONSOLE```. This would involve the same ```REG``` technique that we saw in the [Font](#Font) section.
+Going back to VT100 escape sequences, in earlier versions of Windows 10 you had to enable ```VirtualTerminalLevel``` to 1 in ```HKEY_CURRENT_USER\CONSOLE```. This would involve the same ```REG``` technique that we saw in the [Font](#Font) section. The basic format of a sequence is just having the escape character as a prefix, followed by some sequence of characters. 
 
 The first part is actually getting the escape character. There are many ways to do it. You can either do it "literally", as in you just copy and paste the escape character. In Notepad++ it typically shows up as a empty box character. However, the downside compared to doing it programmatically is that it may get lost when sharing through different file formats and modes, and it can get annoying to keep copy pasting every time. An easier way is to just derive it programmatically. One of the earlier ways to do it was 
 
@@ -134,7 +131,28 @@ By passing in ```PROMPT $E``` to ```CMD``` we start a new CMD session and run th
 
 ### Using Sequences
 
-To use the sequences, all you have to do is print to ```stdout```, for example using ```ECHO``` or ```<NUL SET /P```. Explaining all of the sequences would be pretty useless since they are quite straightforward. A good guide to all of them is in the Microsoft [documentation](https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences). So, I'll only go through some of the most important ones and some tips / tricks. 
+To use the sequences, all you have to do is print to ```stdout```, for example using ```ECHO``` or ```<NUL SET /P```. Explaining all of the sequences would be pretty useless since they are quite straightforward. A good guide to all of them is in the Microsoft [documentation](https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences). So, I'll only go through some of the most important ones and some tips / tricks. For common sequences, I typically use macros so I don't have to type the full sequence all over again. For example, I'll typically have a ```MACROS``` function I call at the beginning of the script which sets macros. However, this is completely optional, it just saves typing.
+
+```Batch
+SET "col=%\e%[38;2;cm"
+SET "bcl=%\e%[48;2;cm"
+SET "up=%\e%[nA"
+SET "dn=%\e%[nB"
+SET "bk=%\e%[nD"
+SET "nx=%\e%[nC"
+```
+
+To use, just use string substitution. For example, setting the colour to ```46;40;36```:
+
+```Batch
+%col:c=46;40;36%
+```
+
+Just remember that these sequences are literally just text. In fact, everything in Batch Script is interpreted as text (strings), which is useful when examining some of the more interesting tricks in Batch Script such as [Command Substitution](https://www.dostips.com/forum/viewtopic.php?f=3&t=6429). Thus, a "sprite" is just saving these sequences into a variable; and this extends very naturally into creating animations, character movement, etc. For example, here is a sprite of the first frame of an idle Peashooter from my Plants vs Zombies [clone](https://github.com/thelowsunoverthemoon/Arcade.bat/blob/master/Scripts/PlantsVsZombies.bat).
+
+```Batch
+SET "peashoot#0=%col:c=130;221;99%%bk:n=1%_│_%up:n=1%%bk:n=2%│%up:n=1%%bk:n=1%%bcl:c=153;224;150%%col:c=0;0;0%•%\e%[0m%col:c=130;221;99%▄"
+```
 
 ### Clearing
 
