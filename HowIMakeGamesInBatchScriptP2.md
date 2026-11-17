@@ -55,6 +55,8 @@ IF "%1" == "" (
 )
 ```
 
+A fun example of this technique in a matrix script by neorobin [here](https://www.dostips.com/forum/viewtopic.php?f=3&t=3381&p=21402&hilit=matrix#p21402).
+
 ## VT100 Escape Sequences
 
 VT100 escape sequence support allows for easy colour graphics in Batch Script: mainly, allowing for arbitrary cursor positioning and multiple colours in one console. Of course, there were ways to do this before VT100 support, but they were cumbersome and obscure.
