@@ -100,7 +100,7 @@ For arbitrary cursor positioning, you could whip something up quickly by manipul
 
 Going back to VT100 escape sequences, in earlier versions of Windows 10 you had to enable ```VirtualTerminalLevel``` to 1 in ```HKEY_CURRENT_USER\CONSOLE```. This would involve the same ```REG``` technique that we saw in the [Font](#Font) section. The basic format of a sequence is just having the escape character as a prefix, followed by some sequence of characters. 
 
-The first part is actually getting the escape character. There are many ways to do it. You can either do it "literally", as in you just copy and paste the escape character. In Notepad++ it typically shows up as a empty box character. However, the downside compared to doing it programmatically is that it may get lost when sharing through different file formats and modes, and it can get annoying to keep copy pasting every time. An easier way is to just derive it programmatically. One of the earlier ways to do it was 
+The first part is actually getting the escape character. There are many ways to do it. You can either do it "literally", as in you just copy and paste the escape character. In Notepad++ it typically shows up as a empty box character. However, the downside compared to doing it programmatically is that it may get lost when sharing through different file formats and modes, and it can get annoying to keep copy pasting every time. An easier way is to just derive it programmatically. One of the earlier ways to do it was:
 
 ```Batch
 FOR /F "tokens=1,2 delims=#" %%A in ('"PROMPT #H#E# & ECHO ON & FOR %%B in (1) DO REM"') DO (
@@ -108,7 +108,7 @@ FOR /F "tokens=1,2 delims=#" %%A in ('"PROMPT #H#E# & ECHO ON & FOR %%B in (1) D
 ) 
 ```
 
-This is actually a pretty cool trick. ```PROMPT``` changes the text that you see before every line on a normal command prompt. Ie, the default is the path followed by >. So, in the PROMPT command, you are setting it to ```#(backspace)#(escape character)#```. Normally, you have ```ECHO OFF```, so you don't see this text before every command. That's why in the next command you set ```ECHO ON```, so you can see the text you just set with ```PROMPT``` (and parse it using ```FOR /F```). Now, the ```FOR %%B in (1) DO REM``` is pretty clever. You can do any command, since they will all trigger the PROMPT text, but I guess the author wanted a command that had no output on its own. Thus, they use ```REM```, which is for the comment. But why the ```FOR```? That's because anything after REM will be treated as a comment (which would cause an error left alone). The FOR "implies" parenthesis that is functionally equivalent to
+```PROMPT``` changes the text that you see before every line on a normal command prompt. Ie, the default is the path followed by >. So, in the ```PROMPT``` command, you are setting it to ```#(backspace)#(escape character)#```. Normally, you have ```ECHO OFF```, so you don't see this text before every command. That's why in the next command you set ```ECHO ON```, so you can see the text you just set with ```PROMPT``` (and parse it using ```FOR /F```). Now, the ```FOR %%B in (1) DO REM``` is pretty clever. You can do any command, since they will all trigger the ```PROMPT``` text, but it's easier to parse a command that has no output on its own. Thus, you can use ```REM```, which is for comments. But why the ```FOR```? That's because anything after ```REM``` will be treated as a comment (which would cause an error left alone). The ```FOR``` "implies" parenthesis that is functionally equivalent to
 
 ```Batch
 FOR %%B in (1) DO (
@@ -116,7 +116,13 @@ FOR %%B in (1) DO (
 )
 ```
 
-Finally, we use ```FOR /F``` to parse the generated text ```PROMPT``` text through the ```REM``` command. So why did we use ```#H#E#``` instead of ```#E```? Actually, you could have. But in this case, now you can also get the backspace character (the chars are separated by #) if you put
+Tangentially, that ```REM``` behavior can be exploited when you want to get everything up to the first delimiter in the string. For example:
+
+```Batch
+SET "head=%str:x=" & REM."%"
+```
+
+By inserting a ```REM``` in place of the delimiter, the rest of the string is treated as a comment and isn't ```SET```, since percent variable expansion is done first before interpreting the commands. For more information on the parser, read [this](https://stackoverflow.com/questions/4094699/how-does-the-windows-command-interpreter-cmd-exe-parse-scripts). Finally, we use ```FOR /F``` to parse the generated text ```PROMPT``` text through the ```REM``` command. So why did we use ```#H#E#``` instead of ```#E```? Actually, you could have. But in this case, now you can also get the backspace character (the chars are separated by #) if you put
 
 ```Batch
 SET "\b=%%A"
