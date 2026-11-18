@@ -1,7 +1,7 @@
 # How I make games in Batch Script, Part 2
 
 ## Introduction
-This is the second part of my guide to making games in Batch Script ([part 1](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/HowIMakeGamesInBatchScriptP1.md)), and covers graphics: how to get colourful graphics in your games. However, note that most of these methods only apply to Windows 10+ (specifically Windows 10 version 1511+. Note that 1511 didn't support true 24 bit RGB colours but still accepted the sequences, just rounded them to the original 16 colour palette; RGB colours were added in 1703), as they rely on VT100 escape sequence support, but they would still work if using a terminal emulator that supports those sequences.
+This is the second part of my guide to making games in Batch Script ([part 1](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/HowIMakeGamesInBatchScriptP1.md)), and covers graphics: how to get colourful graphics in your games. However, some of these methods only apply to Windows 10+ as they rely on VT100 escape sequence support (specifically Windows 10 version 1511+. Note that 1511 didn't support true 24 bit RGB colours but still accepted the sequences, Conhost just rounded the colours to the original 16 colour palette; 24 bit "True Colour" support was added in 1703), but they would still work if using a terminal emulator that supports those sequences.
 
 ## Font
 
@@ -112,7 +112,7 @@ FOR /F "tokens=1,2 delims=#" %%A in ('"PROMPT #H#E# & ECHO ON & FOR %%B in (1) D
 ) 
 ```
 
-```PROMPT``` changes the text that you see before every line on a normal command prompt. Ie, the default is the path followed by >. So, in the ```PROMPT``` command, you are setting it to ```#(backspace)#(escape character)#```. Normally, you have ```ECHO OFF```, so you don't see this text before every command. That's why in the next command you set ```ECHO ON```, so you can see the text you just set with ```PROMPT``` (and parse it using ```FOR /F```). Now, the ```FOR %%B in (1) DO REM``` is pretty clever. You can do any command, since they will all trigger the ```PROMPT``` text, but it's easier to parse a command that has no output on its own. Thus, you can use ```REM```, which is for comments. But why the ```FOR```? That's because anything after ```REM``` will be treated as a comment (which would cause an error left alone). The ```FOR``` "implies" parenthesis that is functionally equivalent to
+```PROMPT``` changes the text that you see before every line on a normal command prompt. Ie, the default is the path followed by >. So, in the ```PROMPT``` command, you are setting it to ```#(backspace)#(escape character)#```. Normally, you have ```ECHO OFF```, so you don't see this text before every command. That's why in the next command you set ```ECHO ON```, so you can see the text you just set with ```PROMPT``` (and parse it using ```FOR /F```). Now, the ```FOR %%B in (1) DO REM``` is pretty clever. You need to do a command to trigger the ```PROMPT``` text, with no output with newlines on its own. Thus, you can use ```REM```, which is for comments. But why the ```FOR```? That's because anything after ```REM``` will be treated as a comment (which would cause an error left alone). The ```FOR``` "implies" parenthesis that is functionally equivalent to
 
 ```Batch
 FOR %%B in (1) DO (
