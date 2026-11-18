@@ -59,6 +59,8 @@ IF "%1" == "" (
 
 A fun example of this technique in a matrix script by neorobin [here](https://www.dostips.com/forum/viewtopic.php?f=3&t=3381&p=21402&hilit=matrix#p21402).
 
+<Add matrix gif>
+    
 ## VT100 Escape Sequences
 
 VT100 escape sequence support allows for easy colour graphics in Batch Script: mainly, allowing for arbitrary cursor positioning and multiple colours in one console. Of course, there were ways to do this before VT100 support, but they were cumbersome and obscure.
@@ -164,6 +166,8 @@ Just remember that these sequences are literally just text. In fact, everything 
 SET "peashoot#0=%col:c=130;221;99%%bk:n=1%_│_%up:n=1%%bk:n=2%│%up:n=1%%bk:n=1%%bcl:c=153;224;150%%col:c=0;0;0%•%\e%[0m%col:c=130;221;99%▄"
 ```
 
+<Add peashooter image>
+    
 ### Clearing
 
 Clearing the screen can be achieved using the ```Erase Character```, ```Erase in Line```, and ```Erase in Display``` sequences. The other ones insert or delete lines / spaces, which can be used for some neat text effects, but not too useful otherwise. For example, ```Insert Line``` can be used to create a Star Wars intro text effect. The important thing to remember for the erase sequences is that they basically overwrite the specified area with spaces. Thus, instead of always doing
@@ -189,6 +193,8 @@ ECHO %ESC%[21;60H%ESC%[1J ^
              %ESC%[15;27HSelect (A^)
 ```
 
+<img src="img/menu.gif" >
+
 Sometimes it's just easier to just overwrite characters. For example, in my game [Rainy Day Teeko](https://github.com/thelowsunoverthemoon/Games.bat/blob/main/RainyDayTeeko/RainyDayTeeko.bat), my rain animation just overwrites the previous position with a space. Technically, I could also use the "Erase Character" sequence but that would be unnecessary since it's only 1 character. If for example the particles were really wide than using that sequence could save on string size. It's in a compact macro form because I use it in many places in that game:
 
 ```Batch
@@ -211,6 +217,8 @@ IF "!add.rain!" == "0" (
 )
 ```
 
+<Add rain gif>
+    
 Finally, this is only somewhat related to erasing, but I like the hide the cursor in games so that you don't see the cursor bouncing around all the time. I usually just ```ECHO``` the "Text Cursor Enable Mode Hide" sequence.
 
 ```Batch
