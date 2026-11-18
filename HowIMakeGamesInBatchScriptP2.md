@@ -139,7 +139,7 @@ By passing in ```PROMPT $E``` to ```CMD``` we start a new CMD session and run th
 
 ### Using Sequences
 
-To use the sequences, all you have to do is print to ```stdout```, for example using ```ECHO``` or ```<NUL SET /P```. Explaining all of the sequences would be pretty useless since they are quite straightforward. A good guide to all of them is in the Microsoft [documentation](https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences). So, I'll only go through some of the most important ones and some tips / tricks. For common sequences, I typically use macros so I don't have to type the full sequence all over again. For example, I'll typically have a ```MACROS``` function I call at the beginning of the script which sets macros. However, this is completely optional, it just saves typing.
+To use the sequences, all you have to do is print to ```stdout```, for example using ```ECHO``` or ```<NUL SET /P```. Explaining all of the sequences would be pretty useless since they are quite straightforward. A good guide to all of them is in the Microsoft [documentation](https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences). So, I'll only go through some of the most important ones and some tips / tricks, and refer to them by their name in the "Description" column. For common sequences, I typically use macros so I don't have to type the full sequence all over again. For example, I'll typically have a ```MACROS``` function I call at the beginning of the script which sets macros. However, this is completely optional, it just saves typing.
 
 ```Batch
 SET "col=%\e%[38;2;cm"
@@ -163,6 +163,57 @@ SET "peashoot#0=%col:c=130;221;99%%bk:n=1%_│_%up:n=1%%bk:n=2%│%up:n=1%%bk:n=
 ```
 
 ### Clearing
+
+Clearing the screen can be achieved using the ```Erase Character```, ```Erase in Line```, and ```Erase in Display``` sequences. The other ones insert or delete lines / spaces, which can be used for some neat text effects, but not too useful otherwise. For example, ```Insert Line``` can be used to create a Star Wars intro text effect. The important thing to remember for the erase sequences is that basically overwrite the specified area with spaces. Thus, instead of always doing
+
+```Batch
+%\e%[2J
+```
+
+For larger screens on slower computers, this can cause a noticeable flicker as the spaces are written. To counteract this, you can 1) use the ```MODE``` command to control how big the console is. However, note this is not currently supported in Terminal, only Conhost. and 2) only erase the sections you need. For example, in a platformer game, you might have user stats at the bottom, and the actual game at the top. You can then do a partial clear, eg if the actual game ends at position ```11, 11```:
+
+```Batch
+%\e%[11;11H%\e%[1J
+```
+
+And just overwrite the user stats when they actually change. This technique can be found in my platformer, [Momodora: Lunar Glow](https://github.com/thelowsunoverthemoon/MomodoraLunarGlow/blob/main/game.bat). The below code prints a title screen, while the bottom contains a separate process that prints an animated border.
+
+```Batch
+ECHO %ESC%[21;60H%ESC%[1J ^
+             !par.disp! ^
+             %ESC%[2;4HLowsun 2025 ^
+             %ESC%[10;23H┳┳┓        ┓%ESC%[1B%ESC%[12D┃┃┃┏┓┏┳┓┏┓┏┫┏┓┏┓┏┓%ESC%[1B%ESC%[18D┛ ┗┗┛┛┗┗┗┛┗┻┗┛┛ ┗┻ ^
+             %ESC%[1B%ESC%[30D%ESC%[38;2;129;197;240m♦︎%ESC%[0m%ESC%[1m Lunar Glow %ESC%[0m%ESC%[38;2;129;197;240m♦︎%ESC%[0m ^
+             %ESC%[15;27HSelect (A^)
+```
+
+Sometimes it's just easier to just overwrite characters. For example, in my game [Rainy Day Teeko](https://github.com/thelowsunoverthemoon/Games.bat/blob/main/RainyDayTeeko/RainyDayTeeko.bat), my rain animation just overwrites the previous position with a space. Technically, I could also use the "Erase Character" sequence but that would be unnecessary since it's only 1 character. If for example the particles were really wide than using that sequence could save on string size. It's in a compact macro form because I use it in many places in that game:
+
+```Batch
+SET $rain=SET "rain.cpy=^!rain.par^!" ^& SET "rain.par=" ^& SET "rain=" ^& FOR %%R in (^^!rain.cpy^^!) DO (FOR /F "tokens=1-3" %%1 in ("%%~R") DO (SET /A "rain.y=%%2 + 1" ^& SET "rain=^!rain^!%\e%[%%2;%%1H%up:n=1% " ^& IF not "^!rain.y^!" == "39" (SET "rain=^!rain^!%\e%[%%2;%%1H%%3" ^& SET rain.par=^^^!rain.par^^^! "%%1 ^!rain.y^! %%3")))
+```
+
+It works by returning a rain sprite into ```rain```. ```rain.par``` contains a list of rain particles with positions, and for each of them we increase the y position and use the positioning sequences write a space character at the previous position. If the rain particle is still valid, we then write the rain sprite. That way we don't have to use any more ```SET /A``` statements. Using it would then be something like this:
+
+```Batch
+SET /A "add.rain=frame %% 9"
+ECHO.!rain!
+%$rain%
+IF "!add.rain!" == "0" (
+    SET /A "rain.x=!RANDOM! %% 70", "rain.type=!RANDOM! %% 2"
+    IF "!rain.type!" == "0" (
+        SET "rain.par=!rain.par! "!rain.x! 1 %col:c=74;101;131%.""
+    ) else (
+        SET "rain.par=!rain.par! "!rain.x! 1 %col:c=108;128;148%^│""
+    )
+)
+```
+
+Finally, this is only somewhat related to erasing, but I like the hide the cursor in games so that you don't see the cursor bouncing around all the time. I usually just ```ECHO``` the "Text Cursor Enable Mode Hide" sequence.
+
+```Batch
+ECHO %\e%[?25l
+```
 
 ### Colours
 
