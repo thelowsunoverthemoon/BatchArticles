@@ -187,12 +187,12 @@ For larger screens on slower computers, this can cause a noticeable flicker as t
 And just overwrite the user stats when they actually change. This technique can be found in my platformer, [Momodora: Lunar Glow](https://github.com/thelowsunoverthemoon/MomodoraLunarGlow/blob/main/game.bat). The below code prints a title screen, while the bottom contains a separate process that prints an animated border.
 
 ```Batch
-ECHO %ESC%[21;60H%ESC%[1J ^
+ECHO %\e%[21;60H%\e%[1J ^
              !par.disp! ^
-             %ESC%[2;4HLowsun 2025 ^
-             %ESC%[10;23H┳┳┓        ┓%ESC%[1B%ESC%[12D┃┃┃┏┓┏┳┓┏┓┏┫┏┓┏┓┏┓%ESC%[1B%ESC%[18D┛ ┗┗┛┛┗┗┗┛┗┻┗┛┛ ┗┻ ^
-             %ESC%[1B%ESC%[30D%ESC%[38;2;129;197;240m♦︎%ESC%[0m%ESC%[1m Lunar Glow %ESC%[0m%ESC%[38;2;129;197;240m♦︎%ESC%[0m ^
-             %ESC%[15;27HSelect (A^)
+             %\e%[2;4HLowsun 2025 ^
+             %\e%[10;23H┳┳┓        ┓%\e%[1B%\e%[12D┃┃┃┏┓┏┳┓┏┓┏┫┏┓┏┓┏┓%\e%[1B%\e%[18D┛ ┗┗┛┛┗┗┗┛┗┻┗┛┛ ┗┻ ^
+             %\e%[1B%ESC%[30D%\e%[38;2;129;197;240m♦︎%\e%[0m%ESC%[1m Lunar Glow %\e%[0m%ESC%[38;2;129;197;240m♦︎%\e%[0m ^
+             %\e%[15;27HSelect (A^)
 ```
 
 <img src="img/menu.gif" >
@@ -228,6 +228,84 @@ ECHO %\e%[?25l
 ```
 
 ### Colours
+
+The colour sequences are very straightforward. The sequences under [Text Formatting]([https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences#extended-colors](https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences#text-formatting)) are based on the original 16 colour palette. The [Extended Colour](https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences#extended-colors) let you give RGB colours / backgrounds to the text. Note that the colours / backgrounds persist until a new colour / background is set. So, for if you set the background colour for a certain sprite, you typically want to do a ```%\e%[0m``` to reset the background back to normal. Something nice is that you can even have 2 "pixels" in a single character by setting the background / foreground on a ```▄``` character. 
+
+The more interesting sequences are the "Modify Screen Colour" sequences. The screen color palette index in the "Behaviour" tab refers to the colour palettes you can see in the settings. For example, in Conhost:
+
+<img width="511" height="335" alt="image" src="https://github.com/user-attachments/assets/4d2d2eb5-3126-4ec3-8c95-175f98a86e86" />
+
+Those sequences change those palettes. Now, you might ask why this is useful? Well, this provides an alternative way of rendering in Terminal (not Conhost). In Terminal, setting those sequences retroactively updates the colours. Therefore, by rendering this way, you might only need to "render once" by having sequences shifting colours instead of writing characters. This can potentially save on sprite size, and also make certain effects much easier. For example, a shifting background script and video by user Grub4k:
+
+```Batch
+@echo off
+setlocal enableDelayedExpansion
+
+set "LINE_WIDTH=10"
+set "COLUMNS=2"
+set "LINES=40"
+set "DELAY=5"
+set "COLOR_MAP=a:ff/ff/cc b:bb/ff/cc c:dd/ff/ff d:cc/cc/ff e:ff/cc/ff f:ff/bb/bb g:ff/bb/aa"
+
+for /f "delims=" %%E in (
+	'forfiles /p "%~dp0." /m "%~nx0" /c "cmd /c echo(0x1B"'
+) do set "\e=%%E"
+set ^"\n=^
+%= leave =%
+^" unchanged
+
+set "colors=0"
+for %%. in (!COLOR_MAP!) do set /a "colors+=1"
+set /a "totalWidth=colors * LINE_WIDTH"
+
+set "#shiftPalette="
+set "#updatePalette="
+set "#initialPalette="
+set "index=10"
+for %%A in (!COLOR_MAP!) do (
+	for /f "tokens=1,2 delims=:" %%a in ("%%A") do (
+		set "#shiftPalette=!#shiftPalette!, %%a=(%%a-9) %% !totalWidth! + 10"
+		set "#updatePalette=!#updatePalette!!\e!]4;^!%%a^!;rgb:%%b!\e!\"
+		set /a "end=index + LINE_WIDTH - 1"
+		for /l %%i in (!index! 1 !end!) do (
+			set "#initialPalette=!#initialPalette!!\e!]4;%%i;rgb:%%b!\e!\"
+		)
+		set /a "index=end + 1, %%a=end"
+	)
+)
+set "#shiftPalette=!#shiftPalette:~2!"
+
+set "part="
+set "line="
+set /a "end=index-1"
+for /l %%i in (10 1 !end!) do set "part=!part!!\e![48;5;%%im "
+for /l %%. in (1 1 !COLUMNS!) do set "line=!line!!part!"
+
+:: Render once
+<nul set /p "=!#initialPalette!"
+for /l %%. in (0 1 !LINES!) do (
+	echo !line!
+	set "line=!line:~22!!line:~,22!"
+)
+<nul set /p "=!\e![0m"
+
+:: Apply effect in loop
+for /f "tokens=1-4 delims=:.," %%a in ("!time: =0!") do set /a "t1=(((1%%a*60)+1%%b)*60+1%%c)*100+1%%d-36610100"
+for /l %%. in (infinite) do (
+	for /f "tokens=1-4 delims=:.," %%a in ("!time: =0!") do (
+		set /a "t2=(((1%%a*60)+1%%b)*60+1%%c)*100+1%%d-36610100, tDiff+=t2-t1, tDiff+=((~(tDiff&(1<<31))>>31)+1)*8640000, t1=t2"
+	)
+	if !tDiff! geq %DELAY% (
+		set /a "tDiff=tDiff %% %DELAY%"
+		set /a "%#shiftPalette%"
+		<nul set /p "=%#updatePalette%"
+	)
+)
+```
+
+<img src="img/screen_table.gif" >
+
+This is an awesome script that shows off many of the unique aspects of Batch Script such as macros and the use of code generation, since everything is text. It also uses the ```FORFILES``` method of generating the escape character. This is an all purpose method to generate any character by hex - see [this thread](https://www.dostips.com/forum/viewtopic.php?t=3857).
 
 ### Positioning
 
