@@ -98,7 +98,9 @@ exit /b
 
 The downside to the ```FINDSTR``` technique is that it is quite slow and creates a temporary file, so a real time game with many colours at once would not work using this. Tangentially, the file name rules come in handy from time to time. For example, in [radish](https://github.com/thelowsunoverthemoon/radish), to allocate the ```CMDCMDLINE``` buffer to an arbitrary size, I use ```%COMSPEC%\\##############\\..\\..\\cmd.exe /k file.bat ```. Since the ```###``` is removed, I can add as many ```#``` as I want. 
 
-For arbitrary cursor positioning, you could whip something up quickly by manipulating spaces and newlines. Not hard per say, but annoying since you would effectively be writing a 2D renderer. However, an interesting technique for arbitrary (but relative) cursor positioning involves exploiting the behaviour of tab and backspace sequences (see [here](https://www.dostips.com/forum/viewtopic.php?t=7898)).
+For arbitrary cursor positioning, you could whip something up quickly by manipulating spaces and newlines. Not hard per say, but annoying since you would effectively be writing a 2D renderer. There are many examples of these traditional renderers online and they are all very impressive: for example [Grub4E](https://github.com/Grub4K/Grub4E.bat) by Grub4K. However, an interesting technique for arbitrary (but relative) cursor positioning involves exploiting the behaviour of tab and backspace sequences (see [here](https://www.dostips.com/forum/viewtopic.php?t=7898)). Here's an image of a demo game from Grub4E:
+
+<img src="img/grub.png" >
 
 ### Prerequisites
 
@@ -166,7 +168,7 @@ Just remember that these sequences are literally just text. In fact, everything 
 SET "peashoot#0=%col:c=130;221;99%%bk:n=1%_│_%up:n=1%%bk:n=2%│%up:n=1%%bk:n=1%%bcl:c=153;224;150%%col:c=0;0;0%•%\e%[0m%col:c=130;221;99%▄"
 ```
 
-<Add peashooter image>
+<img src="img/pea.png" >
     
 ### Clearing
 
