@@ -55,6 +55,8 @@ IF "%1" == "" (
 )
 ```
 
+<img src="img/pacman.gif" >
+
 A fun example of this technique in a matrix script by neorobin [here](https://www.dostips.com/forum/viewtopic.php?f=3&t=3381&p=21402&hilit=matrix#p21402).
 
 ## VT100 Escape Sequences
