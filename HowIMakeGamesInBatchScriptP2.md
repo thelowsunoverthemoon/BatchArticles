@@ -278,7 +278,7 @@ The more interesting sequences are the "Modify Screen Colour" sequences. The scr
 
 <img width="511" height="335" alt="image" src="https://github.com/user-attachments/assets/4d2d2eb5-3126-4ec3-8c95-175f98a86e86" />
 
-Those sequences change those palettes. Now, you might ask why this is useful? Well, this provides an alternative way of rendering in Terminal (not Conhost). In Terminal, setting those sequences retroactively updates the colours. Therefore, by rendering this way, you might only need to "render once" by having sequences shifting colours instead of writing characters. This can potentially save on sprite size, and also make certain effects much easier. For example, a shifting background script and video by user [Grub4k](https://github.com/Grub4K):
+Those sequences change those palettes. Now, you might ask why this is useful? Well, this provides an alternative way of rendering in Terminal (not Conhost). In Terminal, setting those sequences retroactively updates the colours previously written. Therefore, by rendering this way, you might only need to "render once" by having sequences shifting colours instead of writing characters. This can potentially save on sprite size, and also make certain effects much easier. For example, a shifting background script and video by user [Grub4k](https://github.com/Grub4K):
 
 ```Batch
 @echo off
