@@ -352,4 +352,4 @@ Showing Unicode characters is always good for these text based games. However, t
 * Set the code page to 65001 (the Unicode code page) via ```CHCP 65001 >NUL```
 * The font you are using has to have those characters
 
-The reason being is that the code page sets in between the console's character stream and the font. Windows uses the bytes from ```stdout``` and maps those bytes into code points (like "this is a C") based on the code page, then the font maps those code points to the actual glyphs. The default code page for United States English is 437, which is the legacy, 1 byte per code point code page; hence, why you need to change it.
+The reason being is that the code page sets in between the console's byte stream and the font. Windows uses the bytes from ```stdout``` and maps those bytes into code points (like "this is a C") based on the code page, then the font maps those code points to the actual glyphs. The default code page for United States English is 437, which is the legacy, 1 byte per code point code page; hence, why you need to change it.
