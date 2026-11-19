@@ -76,7 +76,7 @@ del "%~2" > nul 2>&1
 goto :eof
 ```
 
-To support all characters / sequences, there are various other improvements to this technique. For example, we can cleverly utilize ```\..\``` in the file created. Due to the file parsing rules, this means that the prefix is removed before being parsed as a filename so that means we don't have to create a new file everytime since it's always going to become ```X```, and also that we can support all characters since the prefix will be removed. Since the file path afterwards is a constant we can backspace everything except the string we want. See the below function, also by ```jeb```.
+To support all characters / sequences, there are various other improvements to this technique. For example, we can cleverly utilize ```\..\``` in the file created. Due to the file parsing rules, this means that the prefix is removed before being parsed as a filename so that means we don't have to create a new file everytime since it's always going to become ```X```, and also that we can support all characters since the prefix will be removed (so we can have non-filename characters). Since the file path afterwards is a constant we can backspace everything except the string we want. See the below function, also by ```jeb```.
 
 Creating the file:
 ```Batch
