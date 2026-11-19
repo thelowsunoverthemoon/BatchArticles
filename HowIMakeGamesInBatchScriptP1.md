@@ -10,7 +10,7 @@ There are 3 main topics I want to cover:
 
 * Multithreading: which gives us non blocking input, so you're not limited to turn based games
 * VT100 escape sequences and Sixels: which gives us colorful graphics
-* Music: which gives us audio in our games
+* Everything Else: Music, Hitboxes etc.
 
 ## Multithreading
 
