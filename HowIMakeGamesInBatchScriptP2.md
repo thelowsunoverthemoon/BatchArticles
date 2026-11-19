@@ -344,6 +344,12 @@ GOTO :EOF
 
 The reason we assume disabled delayed expansion is because the Sixel format contains many special characters like ```!``` or ```^```. During delayed expansion, the parsing of these characters gets quite complicated, and since this step is done during the initialization process, it's easier to read the sprites without delayed expansion. Hence, why we use ```CALL SET```. The reason I use a ```FOR``` loop is because chafa outputs another line with a single erase cursor sequence, so I want to break out of the loop in the first line. I'm sure there's a configuration for that in chafa, but I couldn't find it. Tangentially, a ```FOR /L``` loop technically "doesn't" break out of the loop because the loop is expanded all the way first. So if you ever run into that situation, see some of the ideas [here](https://stackoverflow.com/questions/6728798/exiting-out-of-a-for-loop-in-a-batch-file).
 
-
-
 ## Code Pages
+
+Showing Unicode characters is always good for these text based games. However, to actually use Unicode characters in Batch, a couple things have to be done:
+
+* The file is saved in UTF-8 format. This is because, obviously, you are writing Unicode characters to the file.
+* Set the code page to 65001 (the Unicode code page) via ```CHCP 65001 >NUL```
+* The font you are using has to have those characters
+
+The reason being is that the code page sets in between the console's character stream and the font. Windows uses the bytes from ```stdout``` and maps those bytes into code points (like "this is a C") based on the code page, then the font maps those code points to the actual glyphs. The default code page for United States English is 437, which is the legacy, 1 byte per code point code page; hence, why you need to change it.
