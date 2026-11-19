@@ -57,9 +57,7 @@ IF "%1" == "" (
 
 <img src="img/pacman.gif" >
 
-A fun example of this technique in a matrix script by neorobin [here](https://www.dostips.com/forum/viewtopic.php?f=3&t=3381&p=21402&hilit=matrix#p21402).
-
-<Add matrix gif>
+A fun example of this technique in a Matrix animation script by neorobin [here](https://www.dostips.com/forum/viewtopic.php?f=3&t=3381&p=21402&hilit=matrix#p21402).
     
 ## VT100 Escape Sequences
 
@@ -210,17 +208,15 @@ SET /A "add.rain=frame %% 9"
 ECHO.!rain!
 %$rain%
 IF "!add.rain!" == "0" (
-    SET /A "rain.x=!RANDOM! %% 70", "rain.type=!RANDOM! %% 2"
-    IF "!rain.type!" == "0" (
-        SET "rain.par=!rain.par! "!rain.x! 1 %col:c=74;101;131%.""
-    ) else (
-        SET "rain.par=!rain.par! "!rain.x! 1 %col:c=108;128;148%^│""
-    )
+    SET /A "rain.x=!RANDOM! %% 70"
+    SET "rain.par=!rain.par! "!rain.x! 1 %col:c=108;128;148%^│""
 )
 ```
 
-<Add rain gif>
-    
+Here's the rain animation in action during the game.
+
+<img src="img/teeko.gif" >
+	
 Finally, this is only somewhat related to erasing, but I like the hide the cursor in games so that you don't see the cursor bouncing around all the time. I usually just ```ECHO``` the "Text Cursor Enable Mode Hide" sequence.
 
 ```Batch
@@ -309,5 +305,45 @@ This is an awesome script that shows off many of the unique aspects of Batch Scr
 
 ### Positioning
 
+The most common position sequence you will use is probably the "Cursor Position" sequence, which gives absolute coordinate positioning. This is useful for sprite placement for example. The relative position sequences such as "Cursor Up" are useful for creating the actual sprites. The "Save Cursor" and "Restore Cursor" sequences can also come in handy. For example, if you want to align some sort of table, you can save and restore the previous sequence without knowing the exact string length. In [PrismSong](https://github.com/thelowsunoverthemoon/Games.bat/blob/main/PrismSong/PrismSong.bat):
+
+```Batch
+ECHO %\e%[2J%col:c=70;175;227%%\e%[3;64H(1 - 3) Select Avatar%\e%[4;64H(4) - Confirm%\e%[5;64HSelected : %col:c=160;198;219%None%\e%[1;1H
+FOR %%L in (Hilda Sugotho il-sanqe) DO (
+    SET /A "d[num]+=1"
+    SET "char[!d[num]!]=%%L"
+    FOR /F "tokens=1,5-6 delims=$" %%A in ("!char[%%L]!") DO (
+        ECHO %dn:n=1%%\e%[6G%%C (!d[num]!^)%dn:n=2%%\e%[11G%up:n=1%%\e%[s%dn:n=2%%\e%[6G%%A%\e%[0m
+        FOR %%Q in (%%B) DO (
+            ECHO %\e%[u%dn:n=1%%\e%[s- %%~Q
+        )
+    )
+)
+```
+
+<img width="722" height="432" alt="image" src="https://github.com/user-attachments/assets/feea74c2-022b-41b7-8f38-c0d3c1017670" />
+
 ## Sixels
+
+Sixels are a new addition to Terminal only, not Conhost. I haven't used Sixels extensively, but there are a lot of [cool effects you can do](https://github.com/microsoft/terminal/pull/17421#issuecomment-2177165191). However, I have used it for actual "sprites" in [Momodora: Lunar Glow](https://github.com/thelowsunoverthemoon/MomodoraLunarGlow). I would say the biggest issue is that you reach the line limit quickly since Sixel sprites are quite long. Hence, why in that game I chose to combine both normal characters and sprites.
+
+<img src="img/game.gif" >
+
+To create these sprites, I used sprites from one of my favourite games, [Momodora: Reverie Under the Moonlight](https://store.steampowered.com/app/428550/Momodora_Reverie_Under_The_Moonlight/) and converted them to Sixel format using [chafa](https://github.com/hpjansson/chafa). The basic I function I used to read a single ```.sixel``` file is:
+
+```Batch
+:: | ASSUMES DISABLE DELAYED EXPANSION |
+:READ_SPRITE <file> <name>
+CALL SET "index=%%%2.max%%"
+FOR /F "tokens=* delims=" %%? in (%~1) DO (
+    SET "%2.%index%=%%?"
+    GOTO :EOF
+)
+GOTO :EOF
+```
+
+The reason we assume disabled delayed expansion is because the Sixel format contains many special characters like ```!``` or ```^```. During delayed expansion, the parsing of these characters gets quite complicated, and since this step is done during the initialization process, it's easier to read the sprites without delayed expansion. Hence, why we use ```CALL SET```. The reason I use a ```FOR``` loop is because chafa outputs another line with a single erase cursor sequence, so I want to break out of the loop in the first line. I'm sure there's a configuration for that in chafa, but I couldn't find it. Tangentially, a ```FOR /L``` loop technically "doesn't" break out of the loop because the loop is expanded all the way first. So if you ever run into that situation, see some of the ideas [here](https://stackoverflow.com/questions/6728798/exiting-out-of-a-for-loop-in-a-batch-file).
+
+
+
 ## Code Pages
