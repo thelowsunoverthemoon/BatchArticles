@@ -57,7 +57,54 @@ IF "%1" == "" (
 
 <img src="img/pacman.gif" >
 
-A fun example of this technique in a Matrix animation script by neorobin [here](https://www.dostips.com/forum/viewtopic.php?f=3&t=3381&p=21402&hilit=matrix#p21402).
+A fun example of this technique is in a Matrix animation script by neorobin [here](https://www.dostips.com/forum/viewtopic.php?f=3&t=3381&p=21402&hilit=matrix#p21402), without VT100 escape sequences. To compare, here's a Matrix script by [IcarusLives](https://github.com/IcarusLivesHF), using VT100 escape sequences:
+
+
+```Batch
+@echo off & setlocal enableDelayedExpansion
+set /a "hei=wid=50"
+mode %wid%,%hei%
+
+<nul set /p "=[?25l"
+
+set "streaks=15"
+set "ascii_str=#$'*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]_`abcdefghijklmnopqrstuvwxyz{}~"
+
+for /l %%i in (0,1,%streaks%) do (
+	set /a "this[%%i].x=!random! %% wid + 1"
+	set /a "this[%%i].y=(!random! %% hei) * -1"
+	set /a "rndLength=!random! %% 10 + 10"
+	for /l %%j in (0,!rndLength!,255) do (
+		set /a "rndChr=!random! %% 84"
+		for %%r in (!rndChr!) do (
+			set "this[%%i].ch=!this[%%i].ch![38;2;0;%%j;0m!ascii_str:~%%r,1![B[D"
+		)
+	)
+	set "this[%%i].ch=!this[%%i].ch![0m"
+)
+
+for /l %%# in () do (
+	
+	for /l %%i in (0,1,%streaks%) do (
+		
+		if !this[%%i].y! lss %hei% (
+			set /a "this[%%i].y+=1"
+		) else (
+			set /a "this[%%i].x=!random! %% wid + 1", "this[%%i].y=(!random! %% hei) * -1"
+		)
+		
+		if !this[%%i].x! geq 0 if !this[%%i].x! leq %wid% if !this[%%i].y! geq 0 if !this[%%i].y! leq %hei% (
+			set "screen=!screen![!this[%%i].y!;!this[%%i].x!H!this[%%i].ch!"
+		)
+	)
+	echo [2J!screen!
+	set "screen="
+)
+```
+
+<img src="img/matrix.gif" >
+
+
     
 ## VT100 Escape Sequences
 
@@ -231,7 +278,7 @@ The more interesting sequences are the "Modify Screen Colour" sequences. The scr
 
 <img width="511" height="335" alt="image" src="https://github.com/user-attachments/assets/4d2d2eb5-3126-4ec3-8c95-175f98a86e86" />
 
-Those sequences change those palettes. Now, you might ask why this is useful? Well, this provides an alternative way of rendering in Terminal (not Conhost). In Terminal, setting those sequences retroactively updates the colours. Therefore, by rendering this way, you might only need to "render once" by having sequences shifting colours instead of writing characters. This can potentially save on sprite size, and also make certain effects much easier. For example, a shifting background script and video by user Grub4k:
+Those sequences change those palettes. Now, you might ask why this is useful? Well, this provides an alternative way of rendering in Terminal (not Conhost). In Terminal, setting those sequences retroactively updates the colours. Therefore, by rendering this way, you might only need to "render once" by having sequences shifting colours instead of writing characters. This can potentially save on sprite size, and also make certain effects much easier. For example, a shifting background script and video by user [Grub4k](https://github.com/Grub4K):
 
 ```Batch
 @echo off
