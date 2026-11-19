@@ -327,7 +327,7 @@ FOR %%L in (Hilda Sugotho il-sanqe) DO (
 
 Sixels are a new addition to Terminal only, not Conhost. I haven't used Sixels extensively, but there are a lot of [cool effects you can do](https://github.com/microsoft/terminal/pull/17421#issuecomment-2177165191). However, I have used it for actual "sprites" in [Momodora: Lunar Glow](https://github.com/thelowsunoverthemoon/MomodoraLunarGlow). I would say the biggest issue is that you reach the line limit quickly since Sixel sprites are quite long. Hence, why in that game I chose to combine both normal characters and sprites.
 
-<img src="img/game.gif" >
+<img src="img/momo.gif" >
 
 To create these sprites, I used sprites from one of my favourite games, [Momodora: Reverie Under the Moonlight](https://store.steampowered.com/app/428550/Momodora_Reverie_Under_The_Moonlight/) and converted them to Sixel format using [chafa](https://github.com/hpjansson/chafa). The basic I function I used to read a single ```.sixel``` file is:
 
