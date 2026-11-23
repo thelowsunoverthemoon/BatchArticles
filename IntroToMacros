@@ -1,0 +1,18 @@
+## Introduction
+
+
+What are macros? Laymans terms. give examples.
+
+Why use macros?
+
+Macros in Batch? commandline stuff (why no delayed expansion)
+
+Macros via Caret (why doesn't caret work?)
+
+Creating newline variable
+
+Macros via normal variable (%%)
+
+Macros with parameters
+
+:: multiple paramters :: two loop version (some history) ::  SET /A susbtituion :: singular parameters (via string substitution) :: multiple paramters without two loops (but slower) using FOR modifiers
