@@ -13,7 +13,7 @@ A lot of knowledge on Batch Script is buried away in old Google Groups or forums
 * [Iterators in Batch](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/Iterators.md)
 * HTAs, Chimeras, and more
 * Methods of getting Special Characters
-* [Fun with Code Golf](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/CodeGolf.md)
+* [Fun with Batch Script](https://github.com/thelowsunoverthemoon/BatchArticles/blob/main/FunWithBatchScript.md)
   
 ### Interesting posts
 * Advanced Multithreading: https://www.dostips.com/forum/viewtopic.php?f=3&t=6601&p=63390#p63390
